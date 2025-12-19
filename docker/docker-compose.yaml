@@ -1,0 +1,73 @@
+x-postgres-common:
+  &postgres-common
+  image: postgres:17.4
+  user: postgres
+  restart: always
+
+services:
+  bot-api:
+    container_name: bot-api
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: on-failure
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - DATABASE_HOST=nomo-db    
+      - DATABASE_PORT=5432
+    env_file:
+      - ../.env
+    command: ["/app/bin/run_app.sh"]
+    depends_on:
+      - nomo-db-migrate
+    networks:
+      - nomo-network
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/api/healthcheck | grep -q '\"status\":\"ok\"' || exit 1"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+
+  nomo-db-migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    working_dir: /app
+    command: >
+      /bin/sh -c "
+        alembic upgrade head
+      "
+    environment:
+      - DATABASE_HOST=nomo-db    
+      - DATABASE_PORT=5432
+    env_file:
+      - ../.env
+    depends_on:
+      nomo-db:
+        condition: service_healthy
+    networks:
+      - nomo-network
+
+  nomo-db:
+    <<: *postgres-common
+    container_name: nomo-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nomo-db
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - ../.env
+    networks:
+      - nomo-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  nomo-network:
+    driver: bridge

@@ -21,7 +21,6 @@ RUN poetry install --no-interaction --no-ansi --no-root
 COPY src/           src/
 COPY migrations/    migrations/
 COPY alembic.ini    ./
-COPY data/          data/
 COPY ./bin/         /app/bin/
 
 RUN chmod +x /app/bin/run_app.sh

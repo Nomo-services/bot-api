@@ -1,0 +1,90 @@
+[project]
+name = "bot-api"
+version = "0.0.1"
+description = ""
+authors = [
+    {name = "Danil Emurashin",email = "emurashin@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+    "fastapi (>=0.115.12,<0.116.0)",
+    "uvicorn (>=0.34.2,<0.35.0)",
+    "pydantic-settings (>=2.9.1,<3.0.0)",
+    "pydantic (>=2.11.3,<3.0.0)",
+    "loguru (>=0.7.3,<0.8.0)",
+    "psycopg[binary,pool] (>=3.1.16,<4.0.0)",
+    "passlib[bcrypt] (>=1.7.4,<2.0.0)",
+    "injector (>=0.22.0,<0.23.0)",
+    "alembic (>=1.15.2,<2.0.0)",
+    "sqlalchemy (>=2.0.40,<3.0.0)",
+    "fastapi-jwt-auth (>=0.5.0,<0.6.0)",
+    "python-json-logger (>=3.3.0,<4.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "phonenumbers (>=9.0.5,<10.0.0)",
+    "ruff (>=0.11.6,<0.12.0)",
+    "pyinstrument (>=5.0.2,<6.0.0)",
+    "argon2-cffi (>=23.1.0,<24.0.0)",
+    "greenlet (>=3.2.4,<4.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
+
+# [tool.poetry.group.dev.dependencies]
+# dependencies = [
+
+# ]
+
+
+[tool.ruff]
+line-length = 120
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    # "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # complexity
+]
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 15
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
